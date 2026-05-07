@@ -10,13 +10,8 @@ APP_BUNDLE="$ROOT/.build/$APP_NAME.app"
 CONTENTS_DIR="$APP_BUNDLE/Contents"
 MACOS_DIR="$CONTENTS_DIR/MacOS"
 RESOURCES_DIR="$CONTENTS_DIR/Resources"
-if [[ "${UNIVERSAL:-0}" == "1" ]]; then
-  swift build -c "$CONFIGURATION" --arch arm64 --arch x86_64
-  BIN_DIR="$(swift build -c "$CONFIGURATION" --arch arm64 --arch x86_64 --show-bin-path)"
-else
-  swift build -c "$CONFIGURATION"
-  BIN_DIR="$(swift build -c "$CONFIGURATION" --show-bin-path)"
-fi
+swift build -c "$CONFIGURATION"
+BIN_DIR="$(swift build -c "$CONFIGURATION" --show-bin-path)"
 
 rm -rf "$APP_BUNDLE"
 mkdir -p "$MACOS_DIR" "$RESOURCES_DIR"
