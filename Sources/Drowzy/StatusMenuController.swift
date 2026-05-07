@@ -28,7 +28,7 @@ final class StatusMenuController: NSObject, NSMenuDelegate {
     ) {
         self.assertionController = assertionController
         self.now = now
-        self.statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        self.statusItem = NSStatusBar.system.statusItem(withLength: Self.statusItemLength)
 
         super.init()
 
@@ -55,6 +55,10 @@ final class StatusMenuController: NSObject, NSMenuDelegate {
         rebuildMenu()
     }
 
+    func menuDidClose(_ menu: NSMenu) {
+        statusItem.button?.highlight(false)
+    }
+
     private func configureMenu() {
         menu.autoenablesItems = false
         menu.delegate = self
@@ -65,9 +69,13 @@ final class StatusMenuController: NSObject, NSMenuDelegate {
             return
         }
 
+        statusItem.length = Self.statusItemLength
+        button.alignment = .center
+        button.imageScaling = .scaleProportionallyDown
         button.imagePosition = .imageOnly
+        button.target = self
+        button.action = #selector(showMenu(_:))
         button.toolTip = "Drowzy: Off"
-        statusItem.menu = menu
     }
 
     private func observeSystemWake() {
@@ -142,13 +150,28 @@ final class StatusMenuController: NSObject, NSMenuDelegate {
         rebuildMenu()
     }
 
+    @objc private func showMenu(_ sender: NSStatusBarButton) {
+        refreshState()
+        rebuildMenu()
+        sender.highlight(true)
+        let didOpen = menu.popUp(
+            positioning: nil,
+            at: NSPoint(x: sender.bounds.minX, y: sender.bounds.maxY),
+            in: sender
+        )
+
+        if !didOpen {
+            sender.highlight(false)
+        }
+    }
+
     @objc private func showAboutPanel() {
         NSApp.activate(ignoringOtherApps: true)
         NSApp.orderFrontStandardAboutPanel(options: [
             .applicationName: "Drowzy",
             .applicationVersion: Bundle.main.releaseVersion,
             .version: Bundle.main.buildVersion,
-            .credits: NSAttributedString(string: "A small macOS menu bar app for delaying idle sleep.")
+            .credits: aboutCredits()
         ])
     }
 
@@ -277,6 +300,43 @@ final class StatusMenuController: NSObject, NSMenuDelegate {
         case let .timed(delay, _):
             return "Drowzy is delaying idle sleep for \(delay.menuTitle.lowercased())."
         }
+    }
+
+    private static var statusItemLength: CGFloat {
+        max(NSStatusBar.system.thickness, 24)
+    }
+
+    private func aboutCredits() -> NSAttributedString {
+        let text = """
+        Created by Jason Willems
+
+        A small macOS menu bar app for delaying idle sleep
+
+        Bugs and issues: GitHub Issues
+        """
+        let credits = NSMutableAttributedString(string: text)
+        let websiteRange = (text as NSString).range(of: "Jason Willems")
+        let issuesRange = (text as NSString).range(of: "GitHub Issues")
+
+        addLink(to: "https://jasonwillems.com", in: websiteRange, credits: credits)
+        addLink(to: "https://github.com/at1as/drowzy/issues", in: issuesRange, credits: credits)
+
+        return credits
+    }
+
+    private func addLink(to urlString: String, in range: NSRange, credits: NSMutableAttributedString) {
+        guard range.location != NSNotFound, let url = URL(string: urlString) else {
+            return
+        }
+
+        credits.addAttributes(
+            [
+                .link: url,
+                .foregroundColor: NSColor.linkColor,
+                .underlineStyle: NSUnderlineStyle.single.rawValue
+            ],
+            range: range
+        )
     }
 }
 

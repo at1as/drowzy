@@ -4,6 +4,20 @@ Drowzy is a small macOS menu bar app for keeping your Mac awake. It is built for
 
 The app uses a macOS IOKit no-idle-sleep assertion. It does not install a helper, run a daemon, collect analytics, or send network traffic.
 
+![Drowzy menu bar menu](docs/assets/drowzy-menu.png)
+
+## Quick Start
+
+Build and launch Drowzy with:
+
+```sh
+make launch
+```
+
+`make launch` builds `.build/Drowzy.app`, opens it, and returns control to your shell immediately. Drowzy runs as a menu bar app, so it does not show a Dock icon. Look for the Drowzy icon in the macOS menu bar.
+
+When testing a new build, quit any existing Drowzy instance from the menu bar before running `make launch`.
+
 ## Motivation
 
 Sometimes a local task, long-running build, download, render, or coding agent just needs a few more minutes to finish. The usual choices are too blunt: let the Mac sleep and risk interrupting the work, or keep it awake indefinitely and possibly leave it running all night.
@@ -23,7 +37,7 @@ Drowzy exists for the middle case. It gives you a quick menu bar control for del
 - macOS 12 Monterey or newer to run the packaged app.
 - Xcode 15.4 or Swift 5.10 to build from source.
 
-## Build
+## Development
 
 ```sh
 make test
@@ -36,15 +50,11 @@ The app bundle is written to:
 .build/Drowzy.app
 ```
 
-## Run The App
-
-After building the app, launch it with:
+If you only want to launch an app bundle that has already been built:
 
 ```sh
 open .build/Drowzy.app
 ```
-
-Drowzy runs as a menu bar app, so it does not show a Dock icon. Look for the Drowzy icon in the macOS menu bar.
 
 ## Install Locally
 

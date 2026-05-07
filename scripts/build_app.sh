@@ -58,7 +58,7 @@ cat > "$CONTENTS_DIR/Info.plist" <<PLIST
   <key>LSUIElement</key>
   <true/>
   <key>NSHumanReadableCopyright</key>
-  <string>Copyright 2026 Drowzy contributors</string>
+  <string>Copyright 2026 Jason Willems</string>
 </dict>
 </plist>
 PLIST

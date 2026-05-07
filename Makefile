@@ -3,7 +3,7 @@ BUILD_DIR := .build
 APP_BUNDLE := $(BUILD_DIR)/$(APP_NAME).app
 DESTINATION ?= /Applications
 
-.PHONY: help build test app package install clean
+.PHONY: help build test app launch package install clean
 
 help: ## Show available commands.
 	@awk 'BEGIN {FS = ":.*## "; printf "Available commands:\n"} /^[a-zA-Z_-]+:.*## / {printf "  %-10s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -16,6 +16,9 @@ test: ## Run unit tests.
 
 app: ## Build the macOS app bundle at .build/Drowzy.app.
 	scripts/build_app.sh
+
+launch: app ## Build and launch the app without blocking the shell.
+	open "$(APP_BUNDLE)"
 
 package: ## Create a release zip and checksum in .build/dist.
 	scripts/package_release.sh
