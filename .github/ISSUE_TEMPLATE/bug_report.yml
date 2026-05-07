@@ -1,0 +1,36 @@
+name: Bug Report
+description: Report a reproducible problem in Drowzy.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the problem and what you expected instead.
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+      placeholder: "14.5"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Drowzy version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open Drowzy
+        2. Choose 10 Minutes
+        3. ...
+    validations:
+      required: true
