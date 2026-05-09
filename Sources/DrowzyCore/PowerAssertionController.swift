@@ -35,7 +35,7 @@ public final class PowerAssertionController: PowerAssertionControlling {
 
         var newAssertionID = IOPMAssertionID(0)
         let result = IOPMAssertionCreateWithName(
-            kIOPMAssertionTypeNoIdleSleep as CFString,
+            kIOPMAssertionTypePreventUserIdleSystemSleep as CFString,
             IOPMAssertionLevel(kIOPMAssertionLevelOn),
             reason as CFString,
             &newAssertionID

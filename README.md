@@ -1,8 +1,8 @@
 # Drowzy
 
-Drowzy is a small macOS menu bar app for keeping a Mac awake indefinitely or for a selected short duration. Click the menu bar icon, choose `On Until Turned Off`, or delay idle sleep for `10 Minutes`, `30 Minutes`, `1 Hour`, `2 Hours`, or `5 Hours`.
+Drowzy is a small macOS menu bar app for preventing idle system sleep indefinitely or for a selected short duration. Click the menu bar icon, choose `On Until Turned Off`, or delay idle sleep for `10 Minutes`, `30 Minutes`, `1 Hour`, `2 Hours`, or `5 Hours`.
 
-The app uses a macOS IOKit no-idle-sleep assertion. It does not install a helper, run a daemon, collect analytics, or send network traffic.
+The app uses a macOS IOKit `PreventUserIdleSystemSleep` assertion. It does not install a helper, run a daemon, collect analytics, or send network traffic.
 
 ![Drowzy menu bar menu](docs/assets/drowzy-menu.png)
 
@@ -31,6 +31,7 @@ Drowzy is for the middle case. It provides a quick menu bar control for delaying
 - Menu bar only interface with no Dock icon.
 - Off, indefinite on, and timed sleep delay modes.
 - Timed modes automatically release the power assertion when the selected duration expires.
+- Allows the display to sleep while preventing idle system sleep, so long-running local work can continue with the screen off.
 - Native AppKit implementation with no runtime dependencies.
 - SwiftPM build, focused unit tests, CI, and release packaging scripts.
 
@@ -120,7 +121,15 @@ Unsigned or ad-hoc signed builds may trigger Gatekeeper warnings when shared out
 
 ## How It Works
 
-Selecting an active mode creates a `kIOPMAssertionTypeNoIdleSleep` assertion through IOKit. Selecting `Off`, quitting the app, or reaching a timed mode's expiration releases that assertion.
+Selecting an active mode creates a `kIOPMAssertionTypePreventUserIdleSystemSleep` assertion through IOKit. That prevents idle system sleep, but it does not force the display to stay on. Selecting `Off`, quitting the app, or reaching a timed mode's expiration releases that assertion.
+
+Note: Drowzy does not prevent lid-close sleep, explicit Apple menu Sleep, shutdown or restart, low-battery sleep, or OS-forced sleep.
+
+To verify the active assertion while Drowzy is on:
+
+```sh
+pmset -g assertions | grep Drowzy
+```
 
 ## License
 

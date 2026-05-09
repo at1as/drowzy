@@ -98,7 +98,7 @@ final class StatusMenuController: NSObject, NSMenuDelegate {
         addModeItem(title: "On Until Turned Off", tag: MenuTag.indefinite, isSelected: isIndefinite)
 
         menu.addItem(.separator())
-        addDisabledItem("Delay Sleep")
+        addDisabledItem("Delay Idle Sleep")
 
         for delay in SleepDelay.allCases {
             addModeItem(
